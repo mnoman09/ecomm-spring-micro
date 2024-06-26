@@ -1,0 +1,8 @@
+rootProject.name = 'microservices-parent'
+include 'order-service'
+include 'inventory-service'
+include 'product-service'
+include 'discovery-server'
+include 'api-gateway'
+include 'notification-service'
+

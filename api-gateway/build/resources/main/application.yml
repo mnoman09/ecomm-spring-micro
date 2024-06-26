@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  security:   # Key cloak : docker run -p 8084:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8084/realms/spring-boot-microservices-realm
+  cloud:
+    gateway:
+      routes:
+      - id: product-service
+        uri: lb://product-service
+        predicates:
+        - Path=/api/product
+      - id: order-service
+        uri: lb://order-service
+        predicates:
+        - Path=/api/order
+      - id: inventory-service
+        uri: lb://inventory-service
+        predicates:
+        - Path=/api/inventory/{sku-codes}
+      - id: discovery-server
+        uri: http://localhost:8761
+        predicates:
+        - Path=/eureka/web
+        filters:
+        - SetPath=/
+      - id: discovery-server-static
+        uri: http://localhost:8761
+        predicates:
+        - Path=/eureka/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+logging:
+  level:
+    root: INFO
+  org:
+    springframework:
+      cloud:
+        gateway:
+          route:
+            RouteDefinitionLocator: INFO

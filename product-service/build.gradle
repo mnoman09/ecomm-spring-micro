@@ -1,0 +1,14 @@
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation group: 'io.mongock', name: 'mongock-bom', version: mongock_version, ext: 'pom'
+    implementation group: 'io.mongock', name: 'mongodb-springdata-v4-driver', version: mongock_version
+    implementation group: 'io.mongock', name: 'mongock-springboot-v3', version: mongock_version
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    testImplementation "org.testcontainers:mongodb:1.19.8"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

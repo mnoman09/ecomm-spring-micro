@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: notification-service
+  kafka: # docker run -p 9092:9092 apache/kafka:3.7.0
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: notificationTopic # Default topic of kafka
+    consumer: # cause notification service is consumer
+      group-id: notificationId
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # To tell kafka how to deserialize key
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # to tell kafka how to deserialize value
+      properties:
+        spring:
+          json:
+            type:
+              mapping: event:com.noman.notification_service.event.OrderPlacedEvent
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+server:
+  port: 0

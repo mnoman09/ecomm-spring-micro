@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: order-service
+  datasource:
+    password: admin
+    url: jdbc:postgresql://localhost:5433/order-service
+    username: postgres
+  jpa:
+    properties:
+      hibernate:
+        default_schema: order_service
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialectydsfjbm
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: notificationTopic # Default topic of kafka
+    producer:
+      group-id: notificationId
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # To tell kafka how to serialize key
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # to tell kafka how to serialize value
+      properties:
+        spring:
+          json:
+            type:
+              mapping: event:com.noman.order_service.event.OrderPlacedEvent
+# Enabling actuator
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    health:
+      show-details: always
+
+#Resilience 4j properties
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventory:
+        registerHealthIndicator: true # To see all the states open closed and half open
+        event-consumer-buffer-size: 10
+        slidingWindowType: COUNT_BASED # Circuite breaker change state from closed to open after number of calls.
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  timelimiter:   # Timeout properties
+    instances:
+      inventory:
+        timeout-duration: 3s
+        cancel-running-future: true
+# Setting eureka default zone
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+server:
+  port: 8085
+

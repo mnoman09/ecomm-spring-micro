@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/scripts/000-create-inventory-service-schema.sql
+  - include:
+      file: classpath:/db/changelog/scripts/001-create-inventory-service-tables.sql
+  - include:
+      file: classpath:/db/changelog/scripts/002-seed-data-inventory-service.sql

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file:
+        - classpath:/db/changelog/scripts/000-create-order-service-schema.sql
+  - include:
+      file:
+        - classpath:/db/changelog/scripts/001-create-order-service-tables.sql
